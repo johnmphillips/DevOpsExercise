@@ -1,4 +1,4 @@
-FROM ubuntu:16.10
+FROM ubuntu:22.04
 RUN apt-get update && \
 	apt-get install make gcc libpq-dev ruby ruby-dev -y && \
 	gem install bundler

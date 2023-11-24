@@ -1,6 +1,6 @@
 # DevOps Exercise
 
-Shell program for use in Contently's hiring process.
+Shell program for use in Elevated Signals's hiring process.
 
 
 ## Running Locally
@@ -78,17 +78,19 @@ In the `docker-compose` setup, the Postgres database will be automatically seede
 ElasticSearch data must be seeded manually. Use the following commands to seed data against ElasticSearch running in `docker-compose`:
 
 ```
-curl -XPUT "http://localhost:9200/gifs" -d'
+curl -H "Content-Type: application/json" -XPUT "http://localhost:9200/gifs?pretty" -d'
 {
     "settings": {
         "number_of_shards": 1
     },
     "mappings": {
-        "gif": {
-            "properties": {
-                "url": {
-                    "type": "string",
-                    "index": "no"
+        "properties": {
+            "gif": {
+                "properties": {
+                    "url": {
+                        "type": "text",
+                        "index": "false"
+                    }
                 }
             }
         }
@@ -97,30 +99,30 @@ curl -XPUT "http://localhost:9200/gifs" -d'
 ```
 
 ```
-curl -XPOST "http://localhost:9200/gifs/gif" -d'
+curl -H "Content-Type: application/json" -XPOST "http://localhost:9200/gifs/_doc?pretty" -d'
 {
     "url": "https://media.giphy.com/media/XIqCQx02E1U9W/giphy.gif"
 }'
 ```
 
 ```
-curl -XPOST "http://localhost:9200/gifs/gif" -d'
+curl -H "Content-Type: application/json" -XPOST "http://localhost:9200/gifs/_doc?pretty" -d'
 {
     "url": "https://media.giphy.com/media/3o7qDEq2bMbcbPRQ2c/giphy.gif"
 }'
 ```
 
 ```
-curl -XPOST "http://localhost:9200/gifs/gif" -d'
+curl -H "Content-Type: application/json" -XPOST "http://localhost:9200/gifs/_doc?pretty" -d'
 {
     "url": "http://www.gifbin.com/bin/122016/man-punches-kangaroo.gif"
 }'
 ```
 
 ```
-curl -XPOST "http://localhost:9200/gifs/gif" -d'
+curl -H "Content-Type: application/json" -XPOST "http://localhost:9200/gifs/_doc?pretty" -d'
 {
-    "url": "http://p.fod4.com/p/media/3c64c0225d/6AkZwnwSlWQoma2Aa1Lz_Ice%20Skate%20Wall.gif"
+    "url": "https://media1.giphy.com/media/ji6zzUZwNIuLS/giphy.gif"
 }'
 ```
 

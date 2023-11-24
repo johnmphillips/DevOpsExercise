@@ -16,7 +16,7 @@ get '/' do
 
 	begin
 		log.info("Loading days since last accident")
-		conn = PGconn.open(
+		conn = PG::Connection.new(
 			dbname: ENV['POSTGRES_DB'] || 'example',
 			host: ENV['POSTGRES_HOST'] || 'localhost',
 			user: ENV['POSTGRES_USER'] || 'user',
