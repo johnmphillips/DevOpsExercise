@@ -173,7 +173,7 @@ module "allow_ssh" {
   description = "Allow SSH from my home IP"
   vpc_id      = module.vpc.vpc_id
 
-  ingress_cidr_blocks = ["69.172.146.231/32"]
+  ingress_cidr_blocks = [var.ssh_allowed_cidr]
   ingress_rules       = ["ssh-tcp"]
 }
 
