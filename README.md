@@ -26,6 +26,8 @@ There's some parts i didnt get to tackle such as
 - ECS (i had doubts i could get this to work on free tier, so i didnt want to spend too long pursuing)
 - Best practice secrets maangement for db credentials
 
+There's also some manual steps (seeding the database and elasticsearch which i didnt have time to automate)
+
 ## Alternatives
 
 For improvements to this design I would suggest

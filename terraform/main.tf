@@ -269,6 +269,7 @@ module "db" {
   username = local.db_user
   password = "password"
   port     = "5432"
+  manage_master_user_password = false
 
   iam_database_authentication_enabled = true
 
