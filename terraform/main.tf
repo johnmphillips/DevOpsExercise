@@ -13,8 +13,7 @@ locals {
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
   vpc_cidr = "10.0.0.0/16"
 
-  db_user     = "elevatedsignals"
-  db_password = "very-secure-password"
+  db_user     = "john"
 }
 
 module "vpc" {
@@ -108,7 +107,7 @@ module "frontend_instance" {
     mkdir ~/.docker && echo { \"credsStore\": \"ecr-login\" } >> ~/.docker/config.json
     sudo service docker start
     sudo usermod -a -G docker ec2-user
-    docker run -p 80:4567 --env BACKEND_PORT=80 --env BACKEND_HOST=${module.backend_instance.private_dns} --env POSTGRES_USER=${local.db_user} --env POSTGRES_PASSWORD=${local.db_password} --env POSTGRES_HOST=${module.db.db_instance_endpoint} --env POSTGRES_PORT=${module.db.db_instance_port} --env POSTGRES_DB=${module.db.db_instance_name} ${aws_ecr_repository.frontend.repository_url} 
+    docker run -p 80:4567 --env BACKEND_PORT=80 --env BACKEND_HOST=${module.backend_instance.private_dns} --env POSTGRES_HOST=${module.db.db_instance_address} --env POSTGRES_USER=${local.db_user} ${aws_ecr_repository.frontend.repository_url} 
   EOF
 }
 
@@ -136,7 +135,7 @@ module "backend_instance" {
     mkdir ~/.docker && echo { \"credsStore\": \"ecr-login\" } >> ~/.docker/config.json
     sudo service docker start
     sudo usermod -a -G docker ec2-user
-    docker run -p 80:5000 ${aws_ecr_repository.backend.repository_url}
+    docker run -p 80:5000 --env ELASTICSEARCH_HOST=${module.elasticsearch_instance.private_dns} ${aws_ecr_repository.backend.repository_url}
   EOF
 }
 
@@ -162,7 +161,7 @@ module "elasticsearch_instance" {
     sudo amazon-linux-extras install docker -y
     sudo service docker start
     sudo usermod -a -G docker ec2-user
-    docker run -p 9200:9200 --env discovery.type=single-node elasticsearch:7.17.14
+    docker run -p 9200:9200 --env discovery.type=single-node elasticsearch:7.17.14 
   EOF
 }
 
@@ -253,6 +252,7 @@ module "db_security_group" {
 }
 
 module "db" {
+
   source = "terraform-aws-modules/rds/aws"
 
   identifier = "elevatedsignals"
@@ -265,9 +265,9 @@ module "db" {
   allocated_storage    = 5
   storage_encrypted    = true
 
-  db_name  = "elevatedsignals"
+  db_name  = "example"
   username = local.db_user
-  password = local.db_password
+  password = "password"
   port     = "5432"
 
   iam_database_authentication_enabled = true
